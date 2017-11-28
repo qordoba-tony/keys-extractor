@@ -14,26 +14,39 @@ app.get('/', function(req, res) {
 
 app.post('/convert', function(req, res) {
 	console.log('REQUEST.BODY', req.body.text);
-	const str = req.body.text;
+	// const str = String(req.body.text);
+	const str = 'BLAH BLAH BLAH BLAH';
+	const otherStr = req.body.text;
+	let conversion = {
+		keywords: [],
+		keyphrases: []
+	};
 	// const string = JSON.parse(req.body);
 	retext()
 		.use(keywords)
-		.process(str, function(err, file) {
-			console.log('KEYWORDS:');
+		.process(otherStr, function(err, file) {
+			console.log('KEYWORDS:', file);
 			file.data.keywords.forEach(function(keyword) {
+				console.log('KEYWORD:', conversion);
 				console.log(toString(keyword.matches[0].node));
+				let current = 0;
+				if (keyword.matches[0]) {
+					conversion.keywords.push(toString(keyword.matches[0].node));
+					current += 1;
+				}
 			});
 
 			console.log();
 			console.log('Key-phrases:');
 			file.data.keyphrases.forEach(function(phrase) {
 				console.log(phrase.matches[0].nodes.map(toString).join(''));
+				conversion.keyphrases.push(phrase.matches[0].nodes.map(toString).join(''));
 			});
 		});
-
-	res.send(str);
+	console.log('CONVERSION', conversion);
+	res.send(conversion);
 });
 
 app.listen(3000, function() {
-	console.log('Listening on port 3000');
+	console.log('Please navigate to http://localhost:3000');
 });
