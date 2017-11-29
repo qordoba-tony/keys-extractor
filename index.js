@@ -44,9 +44,24 @@ app.post('/convert', function(req, res) {
 			});
 		});
 	console.log('CONVERSION', conversion);
+
+	// Iterate through oject values and make values lower case
+	const objKeys = Object.keys(conversion);
+
+	objKeys.forEach(key => {
+		let newArray = [];
+		conversion[key].forEach((str) => {
+			console.log(str.toLowerCase());
+			newArray.push(str.toLowerCase());
+		})
+		conversion[key] = newArray;
+	})
+	
 	res.send(conversion);
 });
 
-app.listen(3000, function() {
-	console.log('Please navigate to http://localhost:3000');
+const port = process.env.PORT || 8080;
+
+app.listen(port, function() {
+	console.log('Please navigate to http://localhost:8080');
 });
