@@ -25,9 +25,10 @@ app.post('/convert', function(req, res) {
 	retext()
 		.use(keywords)
 		.process(otherStr, function(err, file) {
-			console.log('KEYWORDS:', file);
+			// console.log('KEYWORDS:', file);
 			file.data.keywords.forEach(function(keyword) {
-				console.log('KEYWORD:', conversion);
+				// console.log('KEYWORD:', keyword);
+				// console.log('CONVERSION: ', conversion);
 				console.log(toString(keyword.matches[0].node));
 				let current = 0;
 				if (keyword.matches[0]) {
@@ -36,14 +37,13 @@ app.post('/convert', function(req, res) {
 				}
 			});
 
-			console.log();
-			console.log('Key-phrases:');
+			// console.log('Key-phrases:');
 			file.data.keyphrases.forEach(function(phrase) {
 				console.log(phrase.matches[0].nodes.map(toString).join(''));
 				conversion.keyphrases.push(phrase.matches[0].nodes.map(toString).join(''));
 			});
 		});
-	console.log('CONVERSION', conversion);
+	// console.log('CONVERSION', conversion);
 
 	// Iterate through oject values and make values lower case
 	const objKeys = Object.keys(conversion);
@@ -51,12 +51,24 @@ app.post('/convert', function(req, res) {
 	objKeys.forEach(key => {
 		let newArray = [];
 		conversion[key].forEach((str) => {
-			console.log(str.toLowerCase());
+			// console.log(str.toLowerCase());
 			newArray.push(str.toLowerCase());
 		})
 		conversion[key] = newArray;
 	})
-	
+
+	let minFiveResults = {
+		keywords: null,
+		keyphrases: null,
+	};
+
+	console.log('CONVERSION', conversion);
+
+	if (conversion.keywords.length > 5) {
+		conversion.keywords = conversion.keywords.slice(conversion.keywords.length - 5, conversion.keywords.length);
+		// console.log('MIN FIVE RESULTS', minFiveResults);
+	}
+
 	res.send(conversion);
 });
 
